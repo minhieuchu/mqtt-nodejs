@@ -72,3 +72,12 @@ mqttClient.on("connect", () => {
     }
   });
 });
+
+mqttClient.on("error", (err) => {
+  console.error("Connection error:", err);
+  mqttClient.end();
+});
+
+mqttClient.on("close", () => {
+  console.log("Mqtt disconnected");
+});
