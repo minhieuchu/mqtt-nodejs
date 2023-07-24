@@ -14,6 +14,7 @@ const options = {
   reconnectPeriod: 1000,
 };
 const intervalTimeout = 3000;
+let intervalID: ReturnType<typeof setInterval> | null = null;
 
 const mqttClient = mqtt.connect(url, options) as MqttClient;
 
@@ -32,7 +33,10 @@ mqttClient.on("connect", () => {
 
   mqttClient.subscribe([DEVICE_TOPIC, TEMPERATURE_TOPIC], { qos: 0 }, (err) => {
     if (!err) {
-      setInterval(() => {
+      if (intervalID) {
+        clearInterval(intervalID);
+      }
+      intervalID = setInterval(() => {
         // Publish Device model
         const deviceModelPayload: DeviceModel = {
           ...initDeviceModelPayload,
